@@ -14,7 +14,7 @@ ENV PYTHONPATH=/app:$PYTHONPATH
 
 WORKDIR /app
 
-COPY ./src /app
+COPY ./src/ /app
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
