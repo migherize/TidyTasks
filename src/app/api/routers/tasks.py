@@ -1,9 +1,9 @@
 import logging
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from app.domain.models.task import Task, TaskCreate, TaskUpdate
 from app.infrastructure.db.session import get_db
-from app.infrastructure.db.crud.task import create_task, get_task, update_task, delete_task
+from app.infrastructure.db.crud.task import create_task, get_task, update_task, delete_task, update_task_status
 
 logger = logging.getLogger(__name__)
 
@@ -32,3 +32,10 @@ def update_task_endpoint(list_id: int, task_id: int, task: TaskUpdate, db: Sessi
 def delete_task_endpoint(list_id: int, task_id: int, db: Session = Depends(get_db)):
     logger.info(f"Deleting task {task_id} from list {list_id}")
     delete_task(db, list_id, task_id)
+
+@router.patch("/{task_id}/status", response_model=Task)
+def change_task_status(list_id: int, task_id: int, is_done: bool, db: Session = Depends(get_db)):
+    task = update_task_status(db, list_id, task_id, is_done)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task

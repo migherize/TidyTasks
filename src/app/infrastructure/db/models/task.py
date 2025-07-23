@@ -10,6 +10,7 @@ class TaskModel(Base):
     description = Column(String, nullable=True)
     priority = Column(String, nullable=False)
     is_done = Column(Boolean, default=False)
+    assignee = Column(String, nullable=True)
     list_id = Column(Integer, ForeignKey("task_lists.id"))
 
     task_list = relationship("TaskListModel", back_populates="tasks")

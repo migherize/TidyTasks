@@ -1,7 +1,6 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from enum import Enum
-
 
 class Priority(str, Enum):
     low = "low"
@@ -12,8 +11,9 @@ class Priority(str, Enum):
 class TaskBase(BaseModel):
     title: str
     description: Optional[str] = None
-    priority: Priority = Priority.medium
     is_done: bool = False
+    priority: Optional[str] = None
+    assignee: Optional[str] = None
 
 
 class TaskCreate(TaskBase):
@@ -29,3 +29,8 @@ class Task(TaskBase):
 
     class Config:
         orm_mode = True
+
+
+class TaskListWithCompletion(BaseModel):
+    tasks: List[Task]
+    completion_percentage: float
