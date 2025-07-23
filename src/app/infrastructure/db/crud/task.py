@@ -1,9 +1,16 @@
-from sqlalchemy.orm import Session
+"""
+CRUD para operaciones sobre el modelo TaskModel: creación, consulta,
+actualización, eliminación y cambio de estado de tareas.
+"""
+
+import logging
+
 from fastapi import HTTPException
+from sqlalchemy.orm import Session
+
 from app.domain.models.task import TaskCreate, TaskUpdate
 from app.infrastructure.db.models.task import TaskModel
 from app.infrastructure.db.models.task_list import TaskListModel
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -29,15 +36,15 @@ def create_task(db: Session, list_id: int, task_data: TaskCreate) -> TaskModel:
         if not task_list:
             raise HTTPException(status_code=404, detail="Task list not found")
 
-        logger.info(f"Creating task in list {list_id}: {task_data.dict()}")
+        logger.info("Creating task in list %d: %s", list_id, task_data.dict())
         db_task = TaskModel(**task_data.dict(), list_id=list_id)
         db.add(db_task)
         db.commit()
         db.refresh(db_task)
         return db_task
     except Exception as e:
-        logger.error(f"Error creating task: {e}")
-        raise HTTPException(status_code=500, detail="Failed to create task")
+        logger.error("Error creating task: %s", e)
+        raise HTTPException(status_code=500, detail="Failed to create task") from e
 
 
 def get_task(db: Session, list_id: int, task_id: int) -> TaskModel:
@@ -66,8 +73,8 @@ def get_task(db: Session, list_id: int, task_id: int) -> TaskModel:
             raise HTTPException(status_code=404, detail="Task not found")
         return task
     except Exception as e:
-        logger.error(f"Error fetching task {task_id} from list {list_id}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to fetch task")
+        logger.error("Error fetching task %d from list %d: %s", task_id, list_id, e)
+        raise HTTPException(status_code=500, detail="Failed to fetch task") from e
 
 
 def update_task(
@@ -99,7 +106,10 @@ def update_task(
             raise HTTPException(status_code=404, detail="Task not found")
 
         logger.info(
-            f"Updating task {task_id} in list {list_id} with data: {task_data.dict(exclude_unset=True)}"
+            "Updating task %d in list %d with data: %s",
+            task_id,
+            list_id,
+            task_data.dict(exclude_unset=True),
         )
         for key, value in task_data.dict(exclude_unset=True).items():
             setattr(db_task, key, value)
@@ -107,8 +117,13 @@ def update_task(
         db.refresh(db_task)
         return db_task
     except Exception as e:
-        logger.error(f"Error updating task {task_id} in list {list_id}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update task")
+        logger.error(
+            "Error updating task %d in list %d: %s",
+            task_id,
+            list_id,
+            e,
+        )
+        raise HTTPException(status_code=500, detail="Failed to update task") from e
 
 
 def delete_task(db: Session, list_id: int, task_id: int) -> None:
@@ -131,14 +146,14 @@ def delete_task(db: Session, list_id: int, task_id: int) -> None:
             .first()
         )
         if not db_task:
-            return False  # No encontrada
-        logger.info(f"Deleting task {task_id} from list {list_id}")
+            return False
+        logger.info("Deleting task %s from list %s", task_id, list_id)
         db.delete(db_task)
         db.commit()
         return True
     except Exception as e:
-        logger.error(f"Error deleting task {task_id} from list {list_id}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to delete task")
+        logger.error("Error deleting task %s from list %s: %s", task_id, list_id, e)
+        raise HTTPException(status_code=500, detail="Failed to delete task") from e
 
 
 def update_task_status(
@@ -169,11 +184,17 @@ def update_task_status(
         if not task:
             raise HTTPException(status_code=404, detail="Task not found")
 
-        logger.info(f"Updating status of task {task_id} in list {list_id} to {is_done}")
+        logger.info(
+            "Updating status of task %s in list %s to %s", task_id, list_id, is_done
+        )
         task.is_done = is_done
         db.commit()
         db.refresh(task)
         return task
     except Exception as e:
-        logger.error(f"Error updating status for task {task_id} in list {list_id}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update task status")
+        logger.error(
+            "Error updating status for task %s in list %s: %s", task_id, list_id, e
+        )
+        raise HTTPException(
+            status_code=500, detail="Failed to update task status"
+        ) from e

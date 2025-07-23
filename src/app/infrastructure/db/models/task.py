@@ -1,13 +1,23 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, func
-from sqlalchemy.orm import relationship
+"""
+Definición del modelo TaskModel para representar tareas individuales dentro de una
+lista de tareas en la base de datos.
+"""
+
+# pylint: disable=not-callable, too-few-public-methods
+
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+
 from app.infrastructure.db.base import Base
+
 
 class TaskModel(Base):
     """
     Modelo que representa una tarea dentro de una lista de tareas.
     Cada tarea puede tener un usuario asignado (mediante UUID).
     """
+
     __tablename__ = "tasks"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -17,7 +27,14 @@ class TaskModel(Base):
     is_done = Column(Boolean, default=False)
     assigned_to = Column(UUID(as_uuid=True), nullable=True)
     list_id = Column(Integer, ForeignKey("task_lists.id"), nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    created_at = Column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
 
     task_list = relationship("TaskListModel", back_populates="tasks")

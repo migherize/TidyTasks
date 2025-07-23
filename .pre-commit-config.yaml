@@ -1,0 +1,37 @@
+fail_fast: true
+repos:
+  - repo: local
+    hooks:
+      - id: system
+        stages: [pre-commit]
+        name: autoflake
+        entry: autoflake -r .
+        pass_filenames: false
+        language: system
+
+  - repo: local
+    hooks:
+      - id: system
+        stages: [pre-commit]
+        name: black
+        entry: black ./src
+        pass_filenames: false
+        language: system
+
+  - repo: local
+    hooks:
+      - id: system
+        stages: [pre-commit]
+        name: pylint
+        entry: pylint ./src
+        pass_filenames: false
+        language: system
+
+  - repo: local
+    hooks:
+      - id: system
+        stages: [pre-commit]
+        name: pytest
+        entry: pytest ./src/tests
+        pass_filenames: false
+        language: system

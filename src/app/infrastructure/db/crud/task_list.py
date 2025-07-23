@@ -1,12 +1,32 @@
-from sqlalchemy.orm import Session
-from typing import Optional, List
-from fastapi import HTTPException, status
-from app.domain.models.task_list import TaskListCreate
-from app.infrastructure.db.models.task_list import TaskListModel
-from app.infrastructure.db.models.task import TaskModel
-from app.domain.models.exceptions import TaskListCreationException
-from app.core.constants import TaskListError
+"""
+Módulo de operaciones CRUD para la gestión de listas de tareas y tareas asociadas.
+
+Este módulo contiene funciones para crear, obtener, actualizar y eliminar listas de tareas, así
+como para consultar tareas con filtros específicos y calcular el porcentaje de tareas completadas.
+
+Utiliza SQLAlchemy para la interacción con la DB y FastAPI HTTPException para manejo de errores.
+
+Funciones principales:
+- create_task_list: Crea una nueva lista de tareas.
+- get_task_list: Obtiene una lista de tareas por ID.
+- update_task_list: Actualiza una lista de tareas existente.
+- delete_task_list: Elimina una lista de tareas por ID.
+- get_tasks_with_filters: Obtiene tareas filtradas y calcula porcentaje de completitud.
+
+Cada función registra logs de operaciones y errores para facilitar el monitoreo y debugging.
+"""
+
 import logging
+from typing import Optional
+
+from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
+
+from app.core.constants import TaskListError
+from app.domain.models.exceptions import TaskListCreationException
+from app.domain.models.task_list import TaskListCreate
+from app.infrastructure.db.models.task import TaskModel
+from app.infrastructure.db.models.task_list import TaskListModel
 
 logger = logging.getLogger(__name__)
 
@@ -26,15 +46,15 @@ def create_task_list(db: Session, list_data: TaskListCreate) -> TaskListModel:
         TaskListCreationException: Si ocurre un error durante la creación.
     """
     try:
-        logger.info(f"Creating task list: {list_data.dict()}")
+        logger.info("Creating task list: %s", list_data.dict())
         db_list = TaskListModel(**list_data.dict())
         db.add(db_list)
         db.commit()
         db.refresh(db_list)
         return db_list
     except Exception as e:
-        logger.error(f"Error creating task list: {e}")
-        raise TaskListCreationException(detail=TaskListError.CREATION_FAILED)
+        logger.error("Error creating task list: %s", e)
+        raise TaskListCreationException(detail=TaskListError.CREATION_FAILED) from e
 
 
 def get_task_list(db: Session, list_id: int) -> TaskListModel:
@@ -53,17 +73,17 @@ def get_task_list(db: Session, list_id: int) -> TaskListModel:
         HTTPException 500: Si ocurre un error inesperado.
     """
     try:
-        logger.info(f"Getting task list ID: {list_id}")
+        logger.info("Getting task list ID: %s", list_id)
         db_list = db.query(TaskListModel).filter(TaskListModel.id == list_id).first()
         if not db_list:
-            logger.warning(f"Task list {list_id} not found")
+            logger.warning("Task list %s not found", list_id)
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="List not found"
             )
         return db_list
     except Exception as e:
-        logger.error(f"Error getting task list {list_id}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get task list")
+        logger.error("Error getting task list %s: %s", list_id, e)
+        raise HTTPException(status_code=500, detail="Failed to get task list") from e
 
 
 def update_task_list(
@@ -85,10 +105,10 @@ def update_task_list(
         HTTPException 500: Si ocurre un error inesperado.
     """
     try:
-        logger.info(f"Updating task list ID {list_id} with: {list_data.dict()}")
+        logger.info("Updating task list ID %s with: %s", list_id, list_data.dict())
         db_list = db.query(TaskListModel).filter(TaskListModel.id == list_id).first()
         if not db_list:
-            logger.warning(f"Task list {list_id} not found for update")
+            logger.warning("Task list %s not found for update", list_id)
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="List not found"
             )
@@ -98,8 +118,8 @@ def update_task_list(
         db.refresh(db_list)
         return db_list
     except Exception as e:
-        logger.error(f"Error updating task list {list_id}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update task list")
+        logger.error("Error updating task in list %s: %s", list_id, e)
+        raise HTTPException(status_code=500, detail="Failed to update task list") from e
 
 
 def delete_task_list(db: Session, list_id: int) -> None:
@@ -115,18 +135,18 @@ def delete_task_list(db: Session, list_id: int) -> None:
         HTTPException 500: Si ocurre un error inesperado.
     """
     try:
-        logger.info(f"Deleting task list ID: {list_id}")
+        logger.info("Deleting task list ID: %s", list_id)
         db_list = db.query(TaskListModel).filter(TaskListModel.id == list_id).first()
         if not db_list:
-            logger.warning(f"Task list {list_id} not found for deletion")
+            logger.warning("Task list %s not found for deletion", list_id)
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="List not found"
             )
         db.delete(db_list)
         db.commit()
     except Exception as e:
-        logger.error(f"Error deleting task list {list_id}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to delete task list")
+        logger.error("Error deleting task list %s: %s", list_id, e)
+        raise HTTPException(status_code=500, detail="Failed to delete task list") from e
 
 
 def get_tasks_with_filters(
@@ -164,5 +184,5 @@ def get_tasks_with_filters(
 
         return filtered_tasks, percentage
     except Exception as e:
-        logger.error(f"Error fetching tasks for list {list_id} with filters: {e}")
-        raise HTTPException(status_code=500, detail="Failed to fetch tasks")
+        logger.error("Error fetching tasks for list %s with filters: %s", list_id, e)
+        raise HTTPException(status_code=500, detail="Failed to fetch tasks") from e
