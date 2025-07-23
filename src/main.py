@@ -3,6 +3,16 @@ from app.infrastructure.db.base import Base
 from app.infrastructure.db.session import engine
 from app.api.routers.tasks import router as api_router_tasks
 from app.api.routers.task_lists import router as api_router_task_lists
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    handlers=[
+        logging.FileHandler("logs/app.log"),
+        logging.StreamHandler()
+    ]
+)
 
 Base.metadata.create_all(bind=engine)
 

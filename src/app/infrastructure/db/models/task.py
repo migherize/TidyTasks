@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from ..base import Base
 
-class Task(Base):
+class TaskModel(Base):
     __tablename__ = "tasks"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -12,4 +12,4 @@ class Task(Base):
     is_done = Column(Boolean, default=False)
     list_id = Column(Integer, ForeignKey("task_lists.id"))
 
-    task_list = relationship("TaskList", back_populates="tasks")
+    task_list = relationship("TaskListModel", back_populates="tasks")
