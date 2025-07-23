@@ -4,18 +4,29 @@ from fastapi import HTTPException, status
 from app.domain.models.task_list import TaskListCreate
 from app.infrastructure.db.models.task_list import TaskListModel
 from app.infrastructure.db.models.task import TaskModel
+from app.domain.models.exceptions import TaskListCreationException
+from app.core.constants import TaskListError
 import logging
 
 logger = logging.getLogger(__name__)
 
 def create_task_list(db: Session, list_data: TaskListCreate) -> TaskListModel:
-    logger.info(f"Creating task list: {list_data.dict()}")
-    db_list = TaskListModel(**list_data.dict())
-    db.add(db_list)
-    db.commit()
-    db.refresh(db_list)
-    return db_list
-
+    """
+    Creates a new task list in the database.
+    Raises:
+        TaskListCreationException: If something goes wrong during creation.
+    """
+    try:
+        logger.info(f"Creating task list: {list_data.dict()}")
+        db_list = TaskListModel(**list_data.dict())
+        db.add(db_list)
+        db.commit()
+        db.refresh(db_list)
+        return db_list
+    except Exception as e:
+        logger.error(f"Error creating task list: {e}")
+        raise TaskListCreationException(detail=TaskListError.CREATION_FAILED)
+    
 def get_task_list(db: Session, list_id: int) -> TaskListModel:
     logger.info(f"Getting task list ID: {list_id}")
     db_list = db.query(TaskListModel).filter(TaskListModel.id == list_id).first()
