@@ -1,16 +1,23 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
-from ..base import Base
+from sqlalchemy.dialects.postgresql import UUID
+from app.infrastructure.db.base import Base
 
 class TaskModel(Base):
+    """
+    Modelo que representa una tarea dentro de una lista de tareas.
+    Cada tarea puede tener un usuario asignado (mediante UUID).
+    """
     __tablename__ = "tasks"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, nullable=False)
-    description = Column(String, nullable=True)
+    title = Column(String(200), nullable=False)
+    description = Column(String(1000), nullable=True)
     priority = Column(String, nullable=False)
     is_done = Column(Boolean, default=False)
-    assignee = Column(String, nullable=True)
-    list_id = Column(Integer, ForeignKey("task_lists.id"))
+    assigned_to = Column(UUID(as_uuid=True), nullable=True)
+    list_id = Column(Integer, ForeignKey("task_lists.id"), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
     task_list = relationship("TaskListModel", back_populates="tasks")

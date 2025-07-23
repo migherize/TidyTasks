@@ -14,3 +14,10 @@ class TaskListNotFoundException(HTTPException):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"La lista de tareas con ID {list_id} no fue encontrada"
         )
+
+class TaskNotFoundException(HTTPException):
+    def __init__(self, task_id: int):
+        super().__init__(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Tarea con ID {task_id} no encontrada"
+        )

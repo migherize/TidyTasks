@@ -96,7 +96,7 @@ tidytasks-backend/
   "description": "Definir agenda y enviar invitación",
   "priority": "high",
   "is_done": false,
-  "assignee": null,
+  "assignee_to": null,
   "created_at": "2025-07-23T18:30:00Z",
   "updated_at": "2025-07-23T18:35:00Z",
   "list_id": 10

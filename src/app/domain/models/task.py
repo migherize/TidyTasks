@@ -9,7 +9,7 @@ class TaskBase(BaseModel):
     description: Optional[str] = Field(None, max_length=500, description="Descripción de la tarea")
     is_done: bool = Field(default=False, description="¿Está completada?")
     priority: Optional[PriorityLevel] = Field(None, description="Prioridad: low, medium o high")
-    assignee: Optional[str] = Field(None, description="Persona asignada (correo electrónico)")
+    assignee_to: Optional[str] = Field(None, description="Persona asignada (correo electrónico)")
 
     @field_validator("title")
     def title_not_empty(cls, value):
@@ -17,7 +17,7 @@ class TaskBase(BaseModel):
             raise ValueError("El título no puede estar vacío")
         return value
 
-    @field_validator("assignee")
+    @field_validator("assignee_to")
     def assignee_format(cls, value):
         if value and not re.match(r"^[\w\.-]+@[\w\.-]+\.\w+$", value):
             raise ValueError("El campo 'assignee' debe ser un email válido")
@@ -43,15 +43,6 @@ class Task(TaskBase):
     Modelo de respuesta de una tarea.
     """
     id: int
-
-    model_config = {
-        "from_attributes": True
-    }
-
-
-class TaskListWithCompletion(BaseModel):
-    tasks: List[Task]
-    completion_percentage: float = Field(..., ge=0.0, le=100.0, description="Porcentaje completado")
 
     model_config = {
         "from_attributes": True
