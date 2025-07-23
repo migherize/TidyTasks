@@ -1,26 +1,71 @@
 # 🧹 TidyTasks
 
-**TidyTasks** es una plataforma ligera para la gestión personal y colaborativa de tareas. Permite a los usuarios organizar sus proyectos mediante listas, añadir tareas con prioridad, hacer seguimiento de su progreso, asignar responsables y simular notificaciones por correo.
+**TidyTasks** es una plataforma ligera para la gestión personal y colaborativa de tareas. Permite a los usuarios organizar proyectos mediante listas, asignar tareas con prioridad, dar seguimiento al progreso, y simular notificaciones por correo.
 
 ---
 
 ## 📌 Objetivos del Proyecto
 
-**TidyTasks** nace con el propósito de ofrecer una solución sencilla pero extensible para la gestión de tareas personales y colaborativas. Los principales objetivos del proyecto son:
-
-- 🧭 **Mejorar la organización personal y de equipos** mediante listas de tareas categorizadas, tareas con prioridades y seguimiento del progreso.
-- 🔄 **Facilitar la colaboración** en equipos reducidos o proyectos personales con la asignación de tareas a usuarios y simulación de notificaciones.
-- ⚙️ **Proveer una API REST robusta, clara y extensible**, desarrollada con FastAPI, que sirva tanto como backend funcional como base para futuras integraciones (web o mobile).
-- 🧱 **Construir una arquitectura limpia y desacoplada**, organizada en capas (Domain, Application, Infrastructure) que permita mantener, escalar y probar el sistema de forma eficiente.
-- 🔒 **Implementar autenticación con JWT y control de acceso**, permitiendo escalar a modelos multiusuario en versiones futuras.
-- 🧪 **Garantizar la calidad del código y la estabilidad**, mediante pruebas automatizadas, linters y herramientas de formateo.
-- 🐳 **Asegurar una fácil distribución y despliegue**, con soporte para entornos Dockerizados listos para desarrollo y producción.
+* 🧭 Mejorar la organización personal y de equipos mediante tareas categorizadas y con prioridades.
+* 🔄 Facilitar la colaboración mediante asignación de responsables y notificaciones.
+* ⚙️ Proveer una API REST clara y extensible con FastAPI.
+* 🧱 Diseñar con una arquitectura limpia y desacoplada.
+* 🔒 Implementar autenticación JWT.
+* 🧪 Asegurar calidad con pruebas automatizadas y herramientas de linting.
+* 🐳 Facilitar despliegue con soporte Docker.
 
 ---
 
-## 📘 Historia de Usuario: Gestión de Tareas
+## 🛠 Tecnologías
 
-> “Como usuario, quiero poder crear tareas dentro de una lista, actualizarlas, cambiar su estado (completa/incompleta), filtrarlas por prioridad o estado, y ver qué porcentaje de la lista está completado para poder organizar mejor mi tiempo y prioridades.”
+* Python 3.10+
+* FastAPI
+* SQLAlchemy
+* Pydantic
+* Uvicorn
+* SQLite (dev) / PostgreSQL (producción)
+* Pytest
+* Docker + Docker Compose
+* Logging estructurado
+
+---
+
+## 🚀 Características Principales
+
+* Clean Architecture adaptada.
+* CRUD de tareas y listas.
+* Autenticación con JWT.
+* Pruebas con Pytest.
+* Documentación automática (`/docs`, `/redoc`).
+* Base de datos SQLite por defecto (PostgreSQL compatible).
+* Logs persistentes por volumen.
+
+---
+
+## 📂 Estructura del Proyecto
+
+```
+tidytasks-backend/
+├── src/
+│   ├── application/        # Casos de uso
+│   ├── domain/             # Entidades y lógica de negocio
+│   ├── infrastructure/     # Repositorios, DB, JWT, etc.
+│   └── main/               # Entrypoint FastAPI, rutas y dependencias
+├── tests/                  # Pruebas unitarias
+├── logs/                   # Carpeta para logs persistentes
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── .env.example
+├── README.md
+└── DECISION_LOG.md
+```
+
+---
+
+## 📘 Historia de Usuario
+
+> “Como usuario, quiero crear tareas dentro de una lista, actualizarlas, completarlas, filtrarlas por prioridad, y ver qué porcentaje de completitud tiene una lista.”
 
 ---
 
@@ -28,36 +73,21 @@
 
 ### 🗂️ Gestión de Tareas
 
-- ✅ **Crear una tarea:**
-  - Campos requeridos: `title`, `priority` (`low`, `medium`, `high`)
-  - Opcionales: `description`, `assignee`
-  - Estado inicial: `pendiente` (`is_done = false`)
-  - Asociada a una lista
-
-- 🔍 **Obtener una tarea específica**
-  - Por `task_id` dentro de una lista
-
-- ✏️ **Actualizar tarea:**
-  - Cambios en `title`, `description`, `priority`, `is_done`, `assignee`
-
-- 🗑️ **Eliminar tarea**
-
-- 🔁 **Cambiar estado** de la tarea (`toggle is_done`)
-
-- 📋 **Listar tareas** dentro de una lista con filtros:
-  - Filtros: `estado` (`is_done = true/false`) y `priority`
-  - Campo adicional: `% de completitud` de la lista
-
----
+* ✅ Crear, obtener, actualizar, eliminar tareas.
+* 🔁 Cambiar estado (`is_done`).
+* 📋 Listar tareas con filtros (`estado`, `prioridad`).
+* 📊 Ver porcentaje de completitud de la lista.
 
 ### 🗃️ Gestión de Listas
 
-- ✅ Crear, actualizar y eliminar listas de tareas
-- Cada lista puede tener un campo `color_tag` (ej: `#FF5733`) o `category` (ej: `"trabajo"`, `"personal"`) para su organización visual
+* ✅ Crear, actualizar y eliminar listas.
+* 🎨 Organización visual por `color_tag` o `category`.
 
 ---
 
-## 🧾 Modelo de Tarea (Conceptual)
+## 🧾 Modelos Conceptuales
+
+### Tarea
 
 ```json
 {
@@ -71,9 +101,9 @@
   "updated_at": "2025-07-23T18:35:00Z",
   "list_id": 10
 }
-
 ```
-## 🧾 Modelo de Tarea (Conceptual)
+
+### Lista
 
 ```json
 {
@@ -81,28 +111,110 @@
   "name": "Tareas laborales",
   "color_tag": "#FF5733",
   "category": "trabajo",
-  "tasks": [
-    {
-      "id": 1,
-      "title": "Preparar reunión",
-      "description": "Definir agenda y enviar invitación",
-      "priority": "high",
-      "is_done": false,
-      "assignee": null,
-      "created_at": "2025-07-23T18:30:00Z",
-      "updated_at": "2025-07-23T18:35:00Z"
-    },
-    {
-      "id": 2,
-      "title": "Enviar reporte mensual",
-      "description": null,
-      "priority": "medium",
-      "is_done": true,
-      "assignee": "juan@example.com",
-      "created_at": "2025-07-20T10:00:00Z",
-      "updated_at": "2025-07-21T15:45:00Z"
-    }
-  ],
+  "tasks": [...],
   "completion_percentage": 50.0
 }
+```
+
+---
+
+## ⚙️ Requisitos
+
+* Python 3.10+
+* Docker
+* Docker Compose v2+
+
+---
+
+## 🧪 Instalación
+
+### ▶️ Opción 1: Sin Docker
+
+1. **Clona el repositorio:**
+
+```bash
+git clone https://github.com/migherize/TidyTasks.git
+cd TidyTasks
+```
+
+2. **Crea y activa un entorno virtual:**
+
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+venv\Scripts\activate     # Windows
+```
+
+3. **Instala dependencias:**
+
+```bash
+pip install -r requirements.txt
+```
+
+4. **Copia y edita `.env`:**
+
+```bash
+cp .env.example .env
+```
+
+5. **Ejecuta la aplicación:**
+
+```bash
+uvicorn src.main:app --reload
+```
+
+6. **Accede a la documentación interactiva:**
+
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+### 🐳 Opción 2: Con Docker
+
+1. **Clona el repositorio y entra al directorio:**
+
+```bash
+git clone https://github.com/migherize/TidyTasks.git
+cd TidyTasks
+```
+
+2. **Copia el archivo `.env`:**
+
+```bash
+cp .env.example .env
+```
+
+3. **Levanta los contenedores:**
+
+```bash
+docker compose up --build
+```
+
+4. **Accede a la API:**
+
+```
+http://localhost:8080/docs
+```
+
+---
+
+## 🔧 Configuración de Base de Datos Externa (opcional)
+
+Puedes usar motores como PostgreSQL o MySQL configurando las siguientes variables en `.env`:
+
+```env
+DB = "mysql+pymysql"
+userDB = "root"
+passwordDB = "password"
+name_serviceDB = "localhost"
+nameBD = "tidytasks"
+port = "3306"
+```
+
+Formato de conexión ejemplo:
+
+```
+postgresql://usuario:contraseña@host:puerto/base_de_datos
 ```

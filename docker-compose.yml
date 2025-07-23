@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  tidy_tasks:
+    container_name: tidy_tasks
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./src/:/app"
+      - "./data/:/app/data"
+      - "./logs/:/app/logs"
+    env_file:
+      - .env
