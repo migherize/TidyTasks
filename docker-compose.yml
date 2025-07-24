@@ -14,5 +14,13 @@ services:
     volumes:
       - "./src/:/app"
       - "./logs/:/app/logs"
-    env_file:
-      - .env
+    environment:
+      - PYTHONPATH=${PYTHONPATH:-./src}
+      - DB=${DB:-postgresql}
+      - USERDB=${USERDB:-tidytasks}
+      - PASSWORDDB=${PASSWORDDB:-tidytasks}
+      - NAME_SERVICEDB=${NAME_SERVICEDB:-db}
+      - PORT=${PORT:-5432}
+      - NAMEDB=${NAMEDB:-tidytasks}
+      - SECRET_KEY=${SECRET_KEY:-devsecretkey123}
+      - ACCESS_TOKEN=${ACCESS_TOKEN:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzUzMzc3NzAxfQ.Lh1_raI7gvsSQxq-v9fZH0tFuzLjsEsOgzRFyiv3UYE} # Ejemplo por defecto

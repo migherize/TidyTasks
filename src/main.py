@@ -30,6 +30,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
+@app.get("/")
 def home_page():
     """
     Clasica pagina de inicio de Fastapi

@@ -40,16 +40,28 @@ def test_get_task_list_by_path_param():
     """
     Verifica que se pueda obtener una lista específica usando su ID en la URL.
     """
-    response = client.get("/lists/1", headers=HEADERS)
-    assert response.status_code in (200, 404)
-    if response.status_code == 200:
-        data = response.json()
-        assert isinstance(data, dict)
-        assert data["id"] == 1
-        assert "name" in data
-        assert "color_tag" in data
-        assert "category" in data
-        assert "tasks" in data
+    create_response = client.post(
+        "/lists/",
+        headers=HEADERS,
+        json={"name": "Lista de ejemplo", "color_tag": "red", "category": "trabajo"},
+    )
+    assert create_response.status_code in (200, 201)
+    data = create_response.json()
+    assert data["name"] == "Lista de ejemplo"
+    assert data["color_tag"] == "red"
+    assert data["category"] == "trabajo"
+
+    list_id = data["id"]
+
+    get_response = client.get(f"/lists/{list_id}", headers=HEADERS)
+    assert get_response.status_code == 200
+    get_data = get_response.json()
+    assert isinstance(get_data, dict)
+    assert get_data["id"] == list_id
+    assert "name" in get_data
+    assert "color_tag" in get_data
+    assert "category" in get_data
+    assert "tasks" in get_data
 
 
 def test_update_task_list():

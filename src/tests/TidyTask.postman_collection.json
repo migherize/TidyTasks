@@ -11,6 +11,20 @@
 			"item": [
 				{
 					"name": "CreateList",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"console.log(\"ID obtenido:\", jsonData.id);",
+									"pm.environment.set(\"list_id\", jsonData.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -85,13 +99,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url_tidy_task}}/lists/1",
+							"raw": "{{url_tidy_task}}/lists/{{list_id}}",
 							"host": [
 								"{{url_tidy_task}}"
 							],
 							"path": [
 								"lists",
-								"1"
+								"{{list_id}}"
 							]
 						}
 					},
@@ -135,13 +149,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url_tidy_task}}/lists/1",
+							"raw": "{{url_tidy_task}}/lists/{{list_id}}",
 							"host": [
 								"{{url_tidy_task}}"
 							],
 							"path": [
 								"lists",
-								"1"
+								"{{list_id}}"
 							]
 						},
 						"description": "Generated from cURL: curl -X 'PUT' \\\n  'http://127.0.0.1:8000/lists/1' \\\n  -H 'accept: application/json' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcwMzY5fQ.9SrRfAezC-ZtiXdPfcMjRL8LUzQv8aCzbWBDzACGHP8' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"name\": \"string\",\n  \"color_tag\": \"red\",\n  \"category\": \"string\"\n}'"
@@ -173,13 +187,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url_tidy_task}}/lists/11",
+							"raw": "{{url_tidy_task}}/lists/{{list_id}}",
 							"host": [
 								"{{url_tidy_task}}"
 							],
 							"path": [
 								"lists",
-								"11"
+								"{{list_id}}"
 							]
 						},
 						"description": "Generated from cURL: curl -X 'DELETE' \\\n  'http://127.0.0.1:8000/lists/11' \\\n  -H 'accept: */*' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcwMzY5fQ.9SrRfAezC-ZtiXdPfcMjRL8LUzQv8aCzbWBDzACGHP8'"
@@ -211,7 +225,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url_tidy_task}}/lists/?list_id=1",
+							"raw": "{{url_tidy_task}}/lists/?list_id={{list_id}}",
 							"host": [
 								"{{url_tidy_task}}"
 							],
@@ -222,7 +236,7 @@
 							"query": [
 								{
 									"key": "list_id",
-									"value": "1"
+									"value": "{{list_id}}"
 								}
 							]
 						},
@@ -273,13 +287,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url_tidy_task}}/lists/1/tasks/",
+							"raw": "{{url_tidy_task}}/lists/{{list_id}}/tasks/",
 							"host": [
 								"{{url_tidy_task}}"
 							],
 							"path": [
 								"lists",
-								"1",
+								"{{list_id}}",
 								"tasks",
 								""
 							]
@@ -313,15 +327,15 @@
 							}
 						],
 						"url": {
-							"raw": "{{url_tidy_task}}/lists/1/tasks/23",
+							"raw": "{{url_tidy_task}}/lists/{{list_id}}/tasks/{{task_id}}",
 							"host": [
 								"{{url_tidy_task}}"
 							],
 							"path": [
 								"lists",
-								"1",
+								"{{list_id}}",
 								"tasks",
-								"23"
+								"{{task_id}}"
 							]
 						},
 						"description": "Generated from cURL: curl -X 'GET' \\\n  'http://127.0.0.1:8000/lists/1/tasks/23' \\\n  -H 'accept: application/json' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc'"
@@ -366,15 +380,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{url_tidy_task}}/lists/1/tasks/23",
+							"raw": "{{url_tidy_task}}/lists/{{list_id}}/tasks/{{task_id}}",
 							"host": [
 								"{{url_tidy_task}}"
 							],
 							"path": [
 								"lists",
-								"1",
+								"{{list_id}}",
 								"tasks",
-								"23"
+								"{{task_id}}"
 							]
 						},
 						"description": "Generated from cURL: curl -X 'PUT' \\\n  'http://127.0.0.1:8000/lists/1/tasks/23' \\\n  -H 'accept: application/json' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"priority\": \"low\",\n  \"assigned_to\": 0,\n  \"is_done\": true\n}'"
@@ -406,15 +420,15 @@
 							}
 						],
 						"url": {
-							"raw": "{{url_tidy_task}}/lists/1/tasks/23",
+							"raw": "{{url_tidy_task}}/lists/{{list_id}}/tasks/{{task_id}}",
 							"host": [
 								"{{url_tidy_task}}"
 							],
 							"path": [
 								"lists",
-								"1",
+								"{{list_id}}",
 								"tasks",
-								"23"
+								"{{task_id}}"
 							]
 						},
 						"description": "Generated from cURL: curl -X 'DELETE' \\\n  'http://127.0.0.1:8000/lists/1/tasks/23' \\\n  -H 'accept: */*' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc'"
@@ -459,15 +473,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{url_tidy_task}}/lists/1/tasks/23/status",
+							"raw": "{{url_tidy_task}}/lists/{{list_id}}/tasks/{{task_id}}/status",
 							"host": [
 								"{{url_tidy_task}}"
 							],
 							"path": [
 								"lists",
-								"1",
+								"{{list_id}}",
 								"tasks",
-								"23",
+								"{{task_id}}",
 								"status"
 							]
 						},
@@ -479,6 +493,20 @@
 		},
 		{
 			"name": "RegisterUserAuth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"username\", jsonData.access_token);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -493,7 +521,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"username\": \"test\",\n  \"email\": \"test@example.com\",\n  \"password\": \"test\"\n}",
+					"raw": "{\n  \"username\": \"test2\",\n  \"email\": \"test2@example.com\",\n  \"password\": \"test1\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -515,6 +543,19 @@
 		},
 		{
 			"name": "LoginUserAuth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"access_token\", jsonData.access_token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -532,12 +573,12 @@
 					"urlencoded": [
 						{
 							"key": "username",
-							"value": "test",
+							"value": "{{username}}",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "test",
+							"value": "test1",
 							"type": "text"
 						}
 					]
