@@ -5,18 +5,24 @@ y crea la instancia de FastAPI con las rutas incluidas.
 """
 
 import logging
-
+from pathlib import Path
 from fastapi import FastAPI
-
 from app.api.routers.task_lists import router as api_router_task_lists
 from app.api.routers.tasks import router as api_router_tasks
+from app.api.routers.auth import router as api_router_auth
 from app.infrastructure.db.base import Base
 from app.infrastructure.db.session import engine
+
+log_path = Path("logs/app.log")
+log_path.parent.mkdir(parents=True, exist_ok=True)
+
+if not log_path.exists():
+    log_path.touch()
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    handlers=[logging.FileHandler("logs/app.log"), logging.StreamHandler()],
+    handlers=[logging.FileHandler(log_path), logging.StreamHandler()],
 )
 
 Base.metadata.create_all(bind=engine)
@@ -31,5 +37,6 @@ def home_page():
     return {"page": "home", "Version": "1.0", "Update Date": "Jul 23 2025"}
 
 
+app.include_router(api_router_auth)
 app.include_router(api_router_tasks)
 app.include_router(api_router_task_lists)

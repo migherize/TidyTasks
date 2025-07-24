@@ -19,8 +19,8 @@ class TaskListModel(Base):
     __tablename__ = "task_lists"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    color_tag = Column(String, nullable=True)
-    category = Column(String, nullable=True)
+    name = Column(String(255), nullable=False)
+    color_tag = Column(String(255), nullable=True)
+    category = Column(String(255), nullable=True)
 
     tasks = relationship("TaskModel", back_populates="task_list")

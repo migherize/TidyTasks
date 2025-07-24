@@ -15,7 +15,9 @@ from app.infrastructure.db.models.task_list import TaskListModel
 logger = logging.getLogger(__name__)
 
 
-def create_task(db: Session, list_id: int, task_data: TaskCreate) -> TaskModel:
+def create_task(
+    db: Session, list_id: int, task_data: TaskCreate, created_by_id: int
+) -> TaskModel:
     """
     Crea una nueva tarea asociada a una lista específica.
 
@@ -37,7 +39,9 @@ def create_task(db: Session, list_id: int, task_data: TaskCreate) -> TaskModel:
             raise HTTPException(status_code=404, detail="Task list not found")
 
         logger.info("Creating task in list %d: %s", list_id, task_data.dict())
-        db_task = TaskModel(**task_data.dict(), list_id=list_id)
+        db_task = TaskModel(
+            **task_data.dict(), list_id=list_id, created_by=created_by_id
+        )
         db.add(db_task)
         db.commit()
         db.refresh(db_task)

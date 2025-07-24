@@ -16,7 +16,10 @@ from app.api.schemas.task_list import (
     TaskListResponse,
     TaskListWithCompletionResponse,
 )
+from app.core.auth.dependencies import get_current_user
 from app.core.constants import PriorityLevel
+from app.infrastructure.db.models.user import UserModel
+
 from app.infrastructure.db.crud.task_list import (
     create_task_list,
     delete_task_list,
@@ -36,7 +39,9 @@ router = APIRouter(prefix="/lists", tags=["Task Lists"])
     response_description="La lista de tareas creada exitosamente",
 )
 def create_list(
-    list_data: TaskListRequest, db: Session = Depends(deps.get_db_session)
+    list_data: TaskListRequest,
+    db: Session = Depends(deps.get_db_session),
+    _current_user: UserModel = Depends(get_current_user),
 ) -> TaskListResponse:
     """
     Crea una nueva lista de tareas para organizar tus actividades.
@@ -66,6 +71,7 @@ def create_list(
 def get_list(
     list_id: int = Path(..., gt=0, description="ID de la lista de tareas"),
     db: Session = Depends(deps.get_db_session),
+    _current_user: UserModel = Depends(get_current_user),
 ) -> TaskListResponse:
     """
     Obtiene una lista de tareas por su ID.
@@ -84,6 +90,7 @@ def update_list(
     list_id: int = Path(..., gt=0, description="ID de la lista de tareas a actualizar"),
     list_data: TaskListRequest = ...,
     db: Session = Depends(deps.get_db_session),
+    _current_user: UserModel = Depends(get_current_user),
 ) -> TaskListResponse:
     """
     Actualiza el nombre de una lista de tareas existente.
@@ -106,6 +113,7 @@ def update_list(
 def delete_list(
     list_id: int = Path(..., gt=0, description="ID de la lista de tareas a eliminar"),
     db: Session = Depends(deps.get_db_session),
+    _current_user: UserModel = Depends(get_current_user),
 ):
     """
     Elimina una lista de tareas por su ID.
@@ -127,6 +135,7 @@ def list_tasks(
         None, description="Filtrar por prioridad (ej: alta, media, baja)"
     ),
     db: Session = Depends(deps.get_db_session),
+    _current_user: UserModel = Depends(get_current_user),
 ) -> TaskListWithCompletionResponse:
     """
     Lista las tareas asociadas a una lista específica, con opción de filtros por estado y prioridad.

@@ -155,26 +155,73 @@
 
 ---
 
-
 ## 🔧 Configuración de Base de Datos Externa
 
-Puedes usar motores como PostgreSQL o MySQL configurando las siguientes variables en `.env`:
+Antes de instalar y ejecutar la aplicación, **debes tener una base de datos creada y accesible**. La aplicación es compatible con múltiples motores de base de datos, tanto relacionales como NoSQL.
+
+### Motores compatibles:
+
+* **Relacionales:** PostgreSQL, MySQL, MariaDB, SQLite
+* **NoSQL:** MongoDB, Redis, CouchDB
+
+Puedes apoyarte en herramientas visuales como **MySQL Workbench**, **pgAdmin**, **DBeaver**, entre otras, para facilitar la creación y gestión de la base de datos.
+
+---
+
+### 1. Crear la Base de Datos
+
+Crea una base de datos vacía con el nombre que desees, utilizando tu motor preferido. Una vez creada, deberás establecer la conexión mediante variables de entorno.
+
+La conexión se construye utilizando una URL estándar que SQLAlchemy interpreta automáticamente. Algunos ejemplos:
+
+```bash
+# PostgreSQL
+postgresql://<usuario>:<contraseña>@<host>:<puerto>/<nombre_base_datos>
+
+# MySQL (con PyMySQL)
+mysql+pymysql://<usuario>:<contraseña>@<host>:<puerto>/<nombre_base_datos>
+```
+
+---
+
+### 2. Variables de Entorno Requeridas
+
+Debes definir las siguientes variables en un archivo `.env` antes de ejecutar la aplicación:
 
 ```env
 PYTHONPATH=$(pwd)/src
-DB = "mysql+pymysql"
-userDB = "root"
-passwordDB = "password"
-name_serviceDB = "localhost"
-nameBD = "tidytasks"
-port = "3306"
+
+# Tipo de base de datos (por ejemplo: postgresql o mysql+pymysql)
+DB=postgresql
+
+# Usuario y contraseña
+USERDB=tidytasks
+PASSWORDDB=tidytasks
+
+# Host y puerto
+NAME_SERVICEDB=localhost
+PORT=5432
+
+# Nombre de la base de datos
+NAMEDB=tidytasks
+
+# JWT
+SECRET_KEY=devsecretkey123
 ```
 
-Formato de conexión ejemplo:
+La aplicación utilizará estos valores para construir automáticamente la URL de conexión:
 
+```text
+<DB>://<USERDB>:<PASSWORDDB>@<NAME_SERVICEDB>:<PORT>/<NAMEDB>
 ```
-postgresql://usuario:contraseña@host:puerto/base_de_datos
+
+Ejemplo real con PostgreSQL:
+
+```text
+postgresql://tidytasks:tidytasks@localhost:5432/tidytasks
 ```
+
+---
 
 ## 🧪 Instalación
 
@@ -213,6 +260,11 @@ pre-commit install
 
 ```bash
 cp .env.example .env
+```
+
+**Base de datos PostgreSQL (modo opcional):**
+```bash
+docker-compose -f docker-compose.db.yml up --build
 ```
 
 5. **Ejecuta la aplicación:**

@@ -23,10 +23,11 @@ class TaskModel(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(200), nullable=False)
     description = Column(String(1000), nullable=True)
-    priority = Column(String, nullable=False)
+    priority = Column(String(50), nullable=False)
     is_done = Column(Boolean, default=False)
     assigned_to = Column(UUID(as_uuid=True), nullable=True)
     list_id = Column(Integer, ForeignKey("task_lists.id"), nullable=False)
+    created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
@@ -38,3 +39,4 @@ class TaskModel(Base):
     )
 
     task_list = relationship("TaskListModel", back_populates="tasks")
+    creator = relationship("UserModel", backref="created_tasks")

@@ -7,7 +7,7 @@ y cambio de estado de tareas en listas específicas.
 
 import logging
 
-from fastapi import APIRouter, Body, Depends, Path, status
+from fastapi import APIRouter, Body, Depends, Path, status, HTTPException
 from sqlalchemy.orm import Session
 
 from app.api import deps
@@ -18,6 +18,7 @@ from app.api.schemas.task import (
     TaskUpdate,
 )
 from app.domain.models.exceptions import TaskNotFoundException
+from app.core.auth.dependencies import get_current_user
 from app.infrastructure.db.crud.task import (
     create_task,
     delete_task,
@@ -25,6 +26,7 @@ from app.infrastructure.db.crud.task import (
     update_task,
     update_task_status,
 )
+from app.infrastructure.db.models.user import UserModel
 
 logger = logging.getLogger(__name__)
 
@@ -43,22 +45,48 @@ def create_task_endpoint(
     ),
     task: TaskCreate = Body(..., description="Datos de la nueva tarea"),
     db: Session = Depends(deps.get_db_session),
+    current_user: UserModel = Depends(get_current_user),
 ) -> TaskResponse:
     """
-    Crea una nueva tarea dentro de una lista de tareas.
+    Crear una nueva tarea en una lista específica.
 
-    ### Ejemplo de cuerpo:
+    Este endpoint permite al usuario autenticado crear una tarea dentro de una lista
+    identificada por su `list_id`. La tarea será registrada con el usuario como creador.
+
+    ## Validaciones
+    - **Título**: debe tener entre 3 y 200 caracteres.
+    - **Descripción**: opcional, máximo 1000 caracteres.
+    - **Prioridad**: uno de los siguientes valores válidos:
+      - `"high"`
+      - `"medium"`
+      - `"low"`
+
+    ## Requiere Autenticación
+    El token JWT debe ser enviado usando el esquema `Bearer` en el encabezado `Authorization`.
+
+    ## Parámetros de ruta
+    - **list_id** (int): ID de la lista a la que se asignará la nueva tarea.
+
+    ## Cuerpo de la solicitud
+    - **title** (str): Título de la tarea.
+    - **description** (str, opcional): Detalle adicional de la tarea.
+    - **priority** (str): Prioridad de la tarea (alta, media o baja).
+
+    ## Ejemplo de solicitud
     ```json
     {
         "title": "Comprar pan",
-        "description": "Ir a la panadería",
-        "priority": "medium",
-        "assigned_to": "123e4567-e89b-12d3-a456-426614174000"
+        "description": "Ir a la panadería antes de las 8 PM",
+        "priority": "medium"
     }
     ```
+
+    ## Respuesta
+    Retorna un objeto con los detalles de la tarea recién creada.
     """
+
     logger.info("Creating task in list %d: %s", list_id, task.dict())
-    return create_task(db, list_id, task)
+    return create_task(db, list_id, task, created_by_id=current_user.id)
 
 
 @router.get("/{task_id}", response_model=TaskResponse, summary="Obtener una tarea")
@@ -66,6 +94,7 @@ def get_task_endpoint(
     list_id: int = Path(..., gt=0),
     task_id: int = Path(..., gt=0),
     db: Session = Depends(deps.get_db_session),
+    current_user: UserModel = Depends(get_current_user),
 ) -> TaskResponse:
     """
     Obtiene una tarea por su ID y el ID de su lista.
@@ -74,6 +103,10 @@ def get_task_endpoint(
     task = get_task(db, list_id, task_id)
     if not task:
         raise TaskNotFoundException(task_id)
+
+    if task.created_by != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
     return task
 
 
@@ -83,6 +116,7 @@ def update_task_endpoint(
     task_id: int = Path(..., gt=0),
     task: TaskUpdate = Body(...),
     db: Session = Depends(deps.get_db_session),
+    current_user: UserModel = Depends(get_current_user),
 ) -> TaskResponse:
     """
     Actualiza una tarea existente dentro de una lista.
@@ -98,6 +132,10 @@ def update_task_endpoint(
     updated_task = update_task(db, list_id, task_id, task)
     if not updated_task:
         raise TaskNotFoundException(task_id)
+
+    if task.created_by != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
     return updated_task
 
 
@@ -108,6 +146,7 @@ def delete_task_endpoint(
     list_id: int = Path(..., gt=0),
     task_id: int = Path(..., gt=0),
     db: Session = Depends(deps.get_db_session),
+    _current_user: UserModel = Depends(get_current_user),
 ):
     """
     Elimina una tarea específica por ID dentro de una lista.
@@ -128,6 +167,7 @@ def change_task_status(
     task_id: int = Path(..., gt=0),
     status_request: StatusChangeRequest = Body(...),
     db: Session = Depends(deps.get_db_session),
+    _current_user: UserModel = Depends(get_current_user),
 ) -> TaskResponse:
     """
     Cambia el estado de completitud (`is_done`) de una tarea específica.
