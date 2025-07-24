@@ -49,18 +49,21 @@ def create_list(
     ## Ejemplo de cuerpo (JSON):
     ```json
     {
-        "name": "Mi lista semanal"
+        "name": "Mi lista semanal",
+        "color_tag": "red",
+        "category": "trabajo"
     }
     ```
 
     - El campo `name` debe ser único y contener entre 3 y 50 caracteres alfanuméricos.
-    - Se devolverá la lista creada junto con sus tareas asociadas (vacía por defecto).
+    - El campo `color_tag` es opcional y permite asociar un color a la lista.
+        - Puede ser uno de los colores predefinidos como `"red"`, `"blue"`, `"green"`, etc.
+    - El campo `category` también es opcional y puede ser usado para clasificar listas.
 
     ### Respuestas:
     - ✅ **201**: Lista creada exitosamente.
     - ❌ **400**: Datos inválidos en la solicitud.
     - ❌ **500**: Error interno al crear la lista.
-
     """
     return create_task_list(db, list_data)
 

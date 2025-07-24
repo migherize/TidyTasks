@@ -21,3 +21,16 @@ class PriorityLevel(str, Enum):
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
+
+
+class ColorTagEnum(str, Enum):
+    """
+    Colores permitidos de list de tareas.
+    """
+
+    RED = "red"
+    GREEN = "green"
+    BLUE = "blue"
+    YELLOW = "yellow"
+    PURPLE = "purple"
+    ORANGE = "orange"

@@ -7,10 +7,12 @@ import logging
 
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-
+from sqlalchemy.exc import IntegrityError
 from app.domain.models.task import TaskCreate, TaskUpdate
 from app.infrastructure.db.models.task import TaskModel
 from app.infrastructure.db.models.task_list import TaskListModel
+from app.infrastructure.db.models.user import UserModel
+from app.infrastructure.email.notifier import notify_assigned_user
 
 logger = logging.getLogger(__name__)
 
@@ -30,13 +32,26 @@ def create_task(
         TaskModel: Instancia de la tarea creada.
 
     Raises:
-        HTTPException 404: Si la lista de tareas no existe.
-        HTTPException 500: Si ocurre un error al crear la tarea.
+        HTTPException 404: Si la lista o usuario asignado no existen.
+        HTTPException 400: Si hay error de integridad.
+        HTTPException 500: Otros errores inesperados.
     """
     try:
         task_list = db.query(TaskListModel).filter(TaskListModel.id == list_id).first()
         if not task_list:
             raise HTTPException(status_code=404, detail="Task list not found")
+
+        assignee = None
+        if task_data.assigned_to:
+            assignee = (
+                db.query(UserModel)
+                .filter(UserModel.id == task_data.assigned_to)
+                .first()
+            )
+            if not assignee:
+                raise HTTPException(
+                    status_code=404, detail="Usuario asignado no existe"
+                )
 
         logger.info("Creating task in list %d: %s", list_id, task_data.dict())
         db_task = TaskModel(
@@ -45,9 +60,28 @@ def create_task(
         db.add(db_task)
         db.commit()
         db.refresh(db_task)
+
+        if assignee:
+            logger.info(
+                "[NOTIFICACIÓN FICTICIA] Se notificó al usuario %s (%s) sobre la tarea '%s'.",
+                assignee.username,
+                assignee.email,
+                db_task.title,
+            )
+            notify_assigned_user(assignee.email, db_task.title)
+
         return db_task
+
+    except IntegrityError as e:
+        logger.warning("Integrity error creating task: %s", e.orig)
+        raise HTTPException(
+            status_code=400,
+            detail="Database integrity error: possible duplicate or invalid data",
+        ) from e
+    except HTTPException:
+        raise  # Propaga HTTPExceptions ya lanzadas arriba
     except Exception as e:
-        logger.error("Error creating task: %s", e)
+        logger.error("Unexpected error creating task: %s", e, exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to create task") from e
 
 

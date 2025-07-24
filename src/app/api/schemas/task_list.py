@@ -7,6 +7,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 from app.api.schemas.task import TaskResponse
+from app.core.constants import ColorTagEnum
 
 
 class TaskListResponse(BaseModel):
@@ -40,7 +41,7 @@ class TaskListRequest(BaseModel):
     """
 
     name: str = Field(..., min_length=3, max_length=50)
-    color_tag: Optional[str] = None
+    color_tag: Optional[ColorTagEnum] = None
     category: Optional[str] = None
 
     @field_validator("name")

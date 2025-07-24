@@ -23,7 +23,7 @@ class TaskBase(BaseModel):
     priority: Optional[PriorityLevel] = Field(
         None, description="Prioridad: low, medium o high"
     )
-    assignee_to: Optional[str] = Field(
+    assigned_to: Optional[str] = Field(
         None, description="Persona asignada (correo electrónico)"
     )
 
@@ -35,10 +35,10 @@ class TaskBase(BaseModel):
             raise ValueError("El título no puede estar vacío")
         return value
 
-    @field_validator("assignee_to")
+    @field_validator("assigned_to")
     @classmethod
     def assignee_format(cls, value: str) -> str:
-        """Valida que el campo 'assignee_to' sea un email válido si no es None."""
+        """Valida que el campo 'assigned_to' sea un email válido si no es None."""
         if value and not re.match(r"^[\w\.-]+@[\w\.-]+\.\w+$", value):
             raise ValueError("El campo 'assignee' debe ser un email válido")
         return value

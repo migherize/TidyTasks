@@ -4,12 +4,17 @@ Módulo para enviar notificaciones por correo electrónico.
 Contiene funciones simuladas para el envío de invitaciones u otras notificaciones.
 """
 
+import logging
 
-def send_fake_invitation(email: str) -> None:
-    """
-    Simula el envío de una invitación por correo electrónico.
+logger = logging.getLogger(__name__)
 
-    Args:
-        email (str): Dirección de correo electrónico del destinatario.
+
+def notify_assigned_user(assignee_email: str, task_title: str) -> None:
     """
-    print(f"Enviando invitación ficticia al correo {email}")
+    Simula el envío de una notificación al usuario asignado.
+    """
+    logger.info(
+        "[NOTIFICACIÓN FICTICIA] Se notificó al usuario %s sobre la tarea '%s'.",
+        assignee_email,
+        task_title,
+    )

@@ -38,5 +38,5 @@ def home_page():
 
 
 app.include_router(api_router_auth)
-app.include_router(api_router_tasks)
 app.include_router(api_router_task_lists)
+app.include_router(api_router_tasks)

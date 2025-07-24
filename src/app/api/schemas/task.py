@@ -4,7 +4,6 @@ Esquemas Pydantic para crear, actualizar y representar tareas en TidyTasks.
 
 from datetime import datetime
 from typing import Optional
-from uuid import UUID
 
 from pydantic import BaseModel, Field
 
@@ -23,7 +22,7 @@ class TaskBase(BaseModel):
     priority: PriorityLevel = Field(
         default=PriorityLevel.MEDIUM, description="Prioridad de la tarea"
     )
-    assigned_to: Optional[UUID | None] = Field(
+    assigned_to: Optional[int | None] = Field(
         None, description="UUID del usuario asignado"
     )
 
@@ -38,7 +37,7 @@ class TaskUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     description: Optional[str] = Field(None, max_length=1000)
     priority: Optional[PriorityLevel]
-    assigned_to: Optional[UUID | None]
+    assigned_to: Optional[int | None]
     is_done: Optional[bool]
 
 
@@ -47,7 +46,7 @@ class TaskResponse(TaskBase):
 
     id: int
     is_done: bool
-    assigned_to: Optional[UUID | None]
+    assigned_to: Optional[int | None]
     list_id: int
     created_by: int
     created_at: datetime

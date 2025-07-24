@@ -102,7 +102,7 @@
   "description": "Definir agenda y enviar invitación",
   "priority": "high",
   "is_done": false,
-  "assignee_to": "ana@example.com",
+  "assigned_to": "ana@example.com",
   "created_at": "2025-07-23T18:30:00Z",
   "updated_at": "2025-07-23T18:35:00Z",
   "list_id": 10
@@ -124,7 +124,7 @@
       "description": "Definir agenda y enviar invitación",
       "priority": "high",
       "is_done": false,
-      "assignee_to": "ana@example.com",
+      "assigned_to": "ana@example.com",
       "created_at": "2025-07-23T18:30:00Z",
       "updated_at": "2025-07-23T18:35:00Z",
       "list_id": 10
@@ -135,7 +135,7 @@
       "description": null,
       "priority": "medium",
       "is_done": true,
-      "assignee_to": "miguel@example.com",
+      "assigned_to": "miguel@example.com",
       "created_at": "2025-07-22T16:00:00Z",
       "updated_at": "2025-07-22T18:00:00Z",
       "list_id": 10

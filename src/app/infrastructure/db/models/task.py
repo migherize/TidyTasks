@@ -6,7 +6,6 @@ lista de tareas en la base de datos.
 # pylint: disable=not-callable, too-few-public-methods
 
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, func
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from app.infrastructure.db.base import Base
@@ -25,7 +24,7 @@ class TaskModel(Base):
     description = Column(String(1000), nullable=True)
     priority = Column(String(50), nullable=False)
     is_done = Column(Boolean, default=False)
-    assigned_to = Column(UUID(as_uuid=True), nullable=True)
+    assigned_to = Column(Integer, ForeignKey("users.id"), nullable=True)
     list_id = Column(Integer, ForeignKey("task_lists.id"), nullable=False)
     created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(
@@ -39,4 +38,7 @@ class TaskModel(Base):
     )
 
     task_list = relationship("TaskListModel", back_populates="tasks")
-    creator = relationship("UserModel", backref="created_tasks")
+    creator = relationship(
+        "UserModel", foreign_keys=[created_by], backref="created_tasks"
+    )
+    assignee = relationship("UserModel", foreign_keys=[assigned_to])

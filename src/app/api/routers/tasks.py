@@ -86,7 +86,13 @@ def create_task_endpoint(
     """
 
     logger.info("Creating task in list %d: %s", list_id, task.dict())
-    return create_task(db, list_id, task, created_by_id=current_user.id)
+    try:
+        return create_task(db, list_id, task, created_by_id=current_user.id)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Unexpected error creating task: %s", e, exc_info=True)
+        raise HTTPException(status_code=500, detail="Internal Server Error") from e
 
 
 @router.get("/{task_id}", response_model=TaskResponse, summary="Obtener una tarea")
@@ -116,12 +122,28 @@ def update_task_endpoint(
     task_id: int = Path(..., gt=0),
     task: TaskUpdate = Body(...),
     db: Session = Depends(deps.get_db_session),
-    current_user: UserModel = Depends(get_current_user),
+    _current_user: UserModel = Depends(get_current_user),
 ) -> TaskResponse:
     """
     Actualiza una tarea existente dentro de una lista.
 
-    Se pueden enviar campos parciales (por ejemplo, solo `is_done` o `title`).
+    Se pueden enviar campos parciales para actualizar solo ciertos valores.
+    Por Ejemplo, solo `title` o `is_done`.
+    ### Campos actualizables:
+    - `title`: título de la tarea.
+    - `description`: descripción opcional.
+    - `priority`: nivel de prioridad (`low`, `medium`, `high`, etc.).
+    - `is_done`: marcar como completada o no.
+    - `assigned_to`: id del usuario asignado (puede ser `null` para desasignar).
+
+    ### Campos **no actualizables** desde este endpoint:
+    - `id`: ID de la tarea.
+    - `list_id`: ID de la lista (no se permite mover la tarea a otra lista).
+    - `created_by`: usuario creador (lo determina el sistema).
+    - `created_at`: fecha de creación (autogenerada).
+    - `updated_at`: fecha de modificación (autogenerada).
+
+    Retorna la tarea actualizada o un error si no se encuentra.
     """
     logger.info(
         "Updating task %d in list %d with data: %s",
@@ -132,9 +154,6 @@ def update_task_endpoint(
     updated_task = update_task(db, list_id, task_id, task)
     if not updated_task:
         raise TaskNotFoundException(task_id)
-
-    if task.created_by != current_user.id:
-        raise HTTPException(status_code=403, detail="Not authorized")
 
     return updated_task
 

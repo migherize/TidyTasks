@@ -8,6 +8,7 @@ generación de tokens JWT y manejo de errores.
 import logging
 from fastapi import APIRouter, Depends, HTTPException, Form
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from app.infrastructure.db.session import get_db
 from app.domain.models.user import UserCreate
 from app.infrastructure.db.crud.auth import register_user, authenticate_user
@@ -27,11 +28,21 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         db (Session): Sesión de base de datos.
 
     Returns:
-        dict: Mensaje de éxito.
+        dict: ID del nuevo usuario y mensaje de éxito.
     """
     try:
-        register_user(db=db, user=user)
-        return {"msg": "User created"}
+        db_user = register_user(db=db, user=user)
+        return {
+            "msg": "User created successfully",
+            "user_id": db_user.id,
+            "username": db_user.username,
+            "email": db_user.email,
+        }
+    except IntegrityError as e:
+        logger.error("Integrity error registering user: %s", e.orig, exc_info=True)
+        raise HTTPException(
+            status_code=400, detail="Username or email already exists."
+        ) from e
     except Exception as e:
         logger.error("Error registering user: %s", e, exc_info=True)
         raise HTTPException(status_code=500, detail="Internal Server Error") from e
