@@ -22,8 +22,8 @@ class TaskBase(BaseModel):
     priority: PriorityLevel = Field(
         default=PriorityLevel.MEDIUM, description="Prioridad de la tarea"
     )
-    assigned_to: Optional[int | None] = Field(
-        None, description="UUID del usuario asignado"
+    assigned_to: Optional[int] = Field(
+        default=None, description="ID del usuario asignado", example=None
     )
 
 
@@ -37,7 +37,9 @@ class TaskUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     description: Optional[str] = Field(None, max_length=1000)
     priority: Optional[PriorityLevel]
-    assigned_to: Optional[int | None]
+    assigned_to: Optional[int] = Field(
+        default=None, description="ID del usuario asignado", example=None
+    )
     is_done: Optional[bool]
 
 
@@ -46,7 +48,9 @@ class TaskResponse(TaskBase):
 
     id: int
     is_done: bool
-    assigned_to: Optional[int | None]
+    assigned_to: Optional[int] = Field(
+        default=None, description="ID del usuario asignado", example=None
+    )
     list_id: int
     created_by: int
     created_at: datetime

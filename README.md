@@ -102,7 +102,7 @@
   "description": "Definir agenda y enviar invitación",
   "priority": "high",
   "is_done": false,
-  "assigned_to": "ana@example.com",
+  "assigned_to": 1,
   "created_at": "2025-07-23T18:30:00Z",
   "updated_at": "2025-07-23T18:35:00Z",
   "list_id": 10
@@ -124,7 +124,7 @@
       "description": "Definir agenda y enviar invitación",
       "priority": "high",
       "is_done": false,
-      "assigned_to": "ana@example.com",
+      "assigned_to": 2,
       "created_at": "2025-07-23T18:30:00Z",
       "updated_at": "2025-07-23T18:35:00Z",
       "list_id": 10
@@ -135,7 +135,7 @@
       "description": null,
       "priority": "medium",
       "is_done": true,
-      "assigned_to": "miguel@example.com",
+      "assigned_to": null,
       "created_at": "2025-07-22T16:00:00Z",
       "updated_at": "2025-07-22T18:00:00Z",
       "list_id": 10
@@ -157,12 +157,11 @@
 
 ## 🔧 Configuración de Base de Datos Externa
 
-Antes de instalar y ejecutar la aplicación, **debes tener una base de datos creada y accesible**. La aplicación es compatible con múltiples motores de base de datos, tanto relacionales como NoSQL.
+Antes de instalar y ejecutar la aplicación, **debes tener una base de datos creada y accesible**. La aplicación es compatible con múltiples motores de base de datos relacionales.
 
 ### Motores compatibles:
 
 * **Relacionales:** PostgreSQL, MySQL, MariaDB, SQLite
-* **NoSQL:** MongoDB, Redis, CouchDB
 
 Puedes apoyarte en herramientas visuales como **MySQL Workbench**, **pgAdmin**, **DBeaver**, entre otras, para facilitar la creación y gestión de la base de datos.
 
@@ -207,6 +206,8 @@ NAMEDB=tidytasks
 
 # JWT
 SECRET_KEY=devsecretkey123
+ACCESS_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcwNTQzfQ.PbLCQuiczV6-cQd-rTGGIgcrWVqRGX0daxFrGs3pURU
+
 ```
 
 La aplicación utilizará estos valores para construir automáticamente la URL de conexión:
@@ -263,9 +264,17 @@ cp .env.example .env
 ```
 
 **Base de datos PostgreSQL (modo opcional):**
+
+Puedes levantar un contenedor de PostgreSQL fácilmente con Docker si no tienes una base de datos local configurada:
+
 ```bash
 docker-compose -f docker-compose.db.yml up --build
 ```
+
+Esto iniciará una instancia de PostgreSQL con las credenciales definidas en el archivo `docker-compose.db.yml`. El contenedor estará accesible desde tu aplicación mediante las variables de entorno.
+
+> ⚠️ **Nota obligatoria**:
+> Si prefieres usar tu propia base de datos local o remota, **es obligatorio** definir correctamente las siguientes variables en tu archivo `.env` para que la aplicación pueda conectarse.
 
 5. **Ejecuta la aplicación:**
 
@@ -300,6 +309,9 @@ cp .env.example .env
 3. **Levanta los contenedores:**
 
 **Base de datos PostgreSQL (modo opcional):**
+
+Igual que en la Opcion 1, debe usarse una DB obligatoriamente.
+
 ```bash
 docker-compose -f docker-compose.db.yml up --build
 ```
@@ -316,10 +328,45 @@ http://localhost:8080/docs
 
 ---
 
-## Test
+## Endpoints principales
 
-Para realizar test de prueba
-    ```
-    pytest                      # ejecuta los 7 test
-    pytest -k test_name         # ejecuta los test 1 a 1
-    ```
+Aquí tienes una captura con los endpoints disponibles en la API:
+
+![Captura Endpoints](docs/endpoints_capture.png)
+
+## Tests
+
+Este proyecto incluye pruebas automatizadas con **pytest** para validar el correcto funcionamiento de los endpoints principales.
+
+### Ejecutar los tests
+
+1. Asegúrate de tener instaladas las dependencias del proyecto:
+
+```bash
+pip install -r requirements.txt
+```
+
+2. Ejecuta las pruebas con pytest:
+
+```bash
+pytest
+```
+
+---
+
+### Colección Postman
+
+Para pruebas manuales, se provee una colección de Postman que facilita la exploración y verificación de los endpoints.
+
+#### Variables de entorno necesarias
+
+Antes de usar la colección, debes configurar dos variables en el entorno de Postman:
+
+* `{{url_tidy_task}}`: URL base donde está corriendo la API (ejemplo: `http://localhost:8000`)
+* `{{access_token}}`: Token Bearer para autenticación en los endpoints protegidos (Endpoint RegisterUserAuth y LoginUserAuth)
+
+---
+
+**Nota:** La correcta configuración de estas variables es necesaria para que las peticiones funcionen correctamente desde Postman.
+
+---

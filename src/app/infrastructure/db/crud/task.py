@@ -41,6 +41,10 @@ def create_task(
         if not task_list:
             raise HTTPException(status_code=404, detail="Task list not found")
 
+        assigned_id = task_data.assigned_to
+        if assigned_id == 0:
+            assigned_id = None
+
         assignee = None
         if task_data.assigned_to:
             assignee = (
@@ -53,10 +57,12 @@ def create_task(
                     status_code=404, detail="Usuario asignado no existe"
                 )
 
-        logger.info("Creating task in list %d: %s", list_id, task_data.dict())
-        db_task = TaskModel(
-            **task_data.dict(), list_id=list_id, created_by=created_by_id
-        )
+        task_dict = task_data.dict()
+        if task_dict["assigned_to"] == 0:
+            task_dict["assigned_to"] = None
+
+        logger.info("Creating task in list %d: %s", list_id, task_dict)
+        db_task = TaskModel(**task_dict, list_id=list_id, created_by=created_by_id)
         db.add(db_task)
         db.commit()
         db.refresh(db_task)
@@ -149,7 +155,16 @@ def update_task(
             list_id,
             task_data.dict(exclude_unset=True),
         )
-        for key, value in task_data.dict(exclude_unset=True).items():
+
+        updated_data = task_data.dict(exclude_unset=True)
+
+        if "assigned_to" in updated_data and updated_data["assigned_to"] == 0:
+            updated_data["assigned_to"] = None
+
+        for key, value in updated_data.items():
+            setattr(db_task, key, value)
+
+        for key, value in updated_data.items():
             setattr(db_task, key, value)
         db.commit()
         db.refresh(db_task)

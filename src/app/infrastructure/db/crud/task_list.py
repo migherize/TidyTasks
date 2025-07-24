@@ -144,6 +144,8 @@ def delete_task_list(db: Session, list_id: int) -> None:
             )
         db.delete(db_list)
         db.commit()
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error("Error deleting task list %s: %s", list_id, e)
         raise HTTPException(status_code=500, detail="Failed to delete task list") from e

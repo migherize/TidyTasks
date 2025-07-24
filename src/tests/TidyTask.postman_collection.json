@@ -1,0 +1,560 @@
+{
+	"info": {
+		"_postman_id": "4a13296c-9c9f-4a7e-9bd6-338c4cbafac4",
+		"name": "TidyTask",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19443922"
+	},
+	"item": [
+		{
+			"name": "Lists",
+			"item": [
+				{
+					"name": "CreateList",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcwMzY5fQ.9SrRfAezC-ZtiXdPfcMjRL8LUzQv8aCzbWBDzACGHP8"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"string\",\n  \"color_tag\": \"red\",\n  \"category\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_tidy_task}}/lists/",
+							"host": [
+								"{{url_tidy_task}}"
+							],
+							"path": [
+								"lists",
+								""
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\n  'http://127.0.0.1:8000/lists/' \\\n  -H 'accept: application/json' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcwMzY5fQ.9SrRfAezC-ZtiXdPfcMjRL8LUzQv8aCzbWBDzACGHP8' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"name\": \"string\",\n  \"color_tag\": \"red\",\n  \"category\": \"string\"\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetList",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcwMzY5fQ.9SrRfAezC-ZtiXdPfcMjRL8LUzQv8aCzbWBDzACGHP8"
+							}
+						],
+						"url": {
+							"raw": "{{url_tidy_task}}/lists/1",
+							"host": [
+								"{{url_tidy_task}}"
+							],
+							"path": [
+								"lists",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateList",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcwMzY5fQ.9SrRfAezC-ZtiXdPfcMjRL8LUzQv8aCzbWBDzACGHP8"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"string\",\n  \"color_tag\": \"red\",\n  \"category\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_tidy_task}}/lists/1",
+							"host": [
+								"{{url_tidy_task}}"
+							],
+							"path": [
+								"lists",
+								"1"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'PUT' \\\n  'http://127.0.0.1:8000/lists/1' \\\n  -H 'accept: application/json' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcwMzY5fQ.9SrRfAezC-ZtiXdPfcMjRL8LUzQv8aCzbWBDzACGHP8' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"name\": \"string\",\n  \"color_tag\": \"red\",\n  \"category\": \"string\"\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteList",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcwMzY5fQ.9SrRfAezC-ZtiXdPfcMjRL8LUzQv8aCzbWBDzACGHP8"
+							}
+						],
+						"url": {
+							"raw": "{{url_tidy_task}}/lists/11",
+							"host": [
+								"{{url_tidy_task}}"
+							],
+							"path": [
+								"lists",
+								"11"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'DELETE' \\\n  'http://127.0.0.1:8000/lists/11' \\\n  -H 'accept: */*' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcwMzY5fQ.9SrRfAezC-ZtiXdPfcMjRL8LUzQv8aCzbWBDzACGHP8'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetListTask",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcxNjA4fQ.GPJA4hgqEJ6re4Mkga8voRRsyz57lJZ7SjIgsfmEGkw"
+							}
+						],
+						"url": {
+							"raw": "{{url_tidy_task}}/lists/?list_id=1",
+							"host": [
+								"{{url_tidy_task}}"
+							],
+							"path": [
+								"lists",
+								""
+							],
+							"query": [
+								{
+									"key": "list_id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\n  'http://127.0.0.1:8000/lists/?list_id=1' \\\n  -H 'accept: application/json' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzcxNjA4fQ.GPJA4hgqEJ6re4Mkga8voRRsyz57lJZ7SjIgsfmEGkw'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "CreateTask",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"priority\": \"medium\",\n  \"assigned_to\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_tidy_task}}/lists/1/tasks/",
+							"host": [
+								"{{url_tidy_task}}"
+							],
+							"path": [
+								"lists",
+								"1",
+								"tasks",
+								""
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\n  'http://127.0.0.1:8000/lists/1/tasks/' \\\n  -H 'accept: application/json' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"priority\": \"medium\",\n  \"assigned_to\": 0\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetTask",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc"
+							}
+						],
+						"url": {
+							"raw": "{{url_tidy_task}}/lists/1/tasks/23",
+							"host": [
+								"{{url_tidy_task}}"
+							],
+							"path": [
+								"lists",
+								"1",
+								"tasks",
+								"23"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\n  'http://127.0.0.1:8000/lists/1/tasks/23' \\\n  -H 'accept: application/json' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc'"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTask",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"priority\": \"low\",\n  \"assigned_to\": 0,\n  \"is_done\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_tidy_task}}/lists/1/tasks/23",
+							"host": [
+								"{{url_tidy_task}}"
+							],
+							"path": [
+								"lists",
+								"1",
+								"tasks",
+								"23"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'PUT' \\\n  'http://127.0.0.1:8000/lists/1/tasks/23' \\\n  -H 'accept: application/json' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"priority\": \"low\",\n  \"assigned_to\": 0,\n  \"is_done\": true\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "DaleteTask",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc"
+							}
+						],
+						"url": {
+							"raw": "{{url_tidy_task}}/lists/1/tasks/23",
+							"host": [
+								"{{url_tidy_task}}"
+							],
+							"path": [
+								"lists",
+								"1",
+								"tasks",
+								"23"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'DELETE' \\\n  'http://127.0.0.1:8000/lists/1/tasks/23' \\\n  -H 'accept: */*' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc'"
+					},
+					"response": []
+				},
+				{
+					"name": "ChangeStatus",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"is_done\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_tidy_task}}/lists/1/tasks/23/status",
+							"host": [
+								"{{url_tidy_task}}"
+							],
+							"path": [
+								"lists",
+								"1",
+								"tasks",
+								"23",
+								"status"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'PATCH' \\\n  'http://127.0.0.1:8000/lists/1/tasks/23/status' \\\n  -H 'accept: application/json' \\\n  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzUzMzczNjg2fQ.b7NxqCk1QTN_eknGoDmd8l_S5v5w_-5FKrEpZddTDSc' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"is_done\": true\n}'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RegisterUserAuth",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"test\",\n  \"email\": \"test@example.com\",\n  \"password\": \"test\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_tidy_task}}/auth/register",
+					"host": [
+						"{{url_tidy_task}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginUserAuth",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url_tidy_task}}/auth/login",
+					"host": [
+						"{{url_tidy_task}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'POST' \\\n  'http://127.0.0.1:8000/auth/login' \\\n  -H 'accept: application/json' \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -d 'username=test&password=test'"
+			},
+			"response": []
+		}
+	]
+}

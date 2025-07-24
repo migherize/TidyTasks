@@ -13,7 +13,6 @@ services:
       - "8080:8080"
     volumes:
       - "./src/:/app"
-      - "./data/:/app/data"
       - "./logs/:/app/logs"
     env_file:
       - .env

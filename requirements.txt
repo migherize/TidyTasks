@@ -9,6 +9,7 @@ certifi==2025.7.14
 cffi==1.17.1
 cfgv==3.4.0
 click==8.2.1
+coverage==7.9.2
 cryptography==42.0.7
 dill==0.4.0
 distlib==0.4.0
@@ -55,6 +56,7 @@ pylint==3.3.7
 PyMySQL==1.0.2
 pytest==8.4.1
 pytest-asyncio==1.1.0
+pytest-cov==6.2.1
 python-dotenv==1.1.1
 python-jose==3.5.0
 python-multipart==0.0.20
