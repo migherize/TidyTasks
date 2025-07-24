@@ -199,6 +199,14 @@ venv\Scripts\activate     # Windows
 
 ```bash
 pip install -r requirements.txt
+
+#  Para aplicar formateo automático
+black 
+flake8 
+isort 
+
+# Se recomienda configurar pre-commit
+pre-commit install
 ```
 
 4. **Copia y edita `.env`:**
