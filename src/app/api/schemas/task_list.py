@@ -3,10 +3,9 @@ Esquemas de Pydantic para listas de tareas (Task Lists) en TidyTasks.
 Define modelos para respuestas y solicitudes relacionadas con listas de tareas.
 """
 
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field, field_validator
-
 from app.api.schemas.task import TaskResponse
 
 
@@ -17,6 +16,8 @@ class TaskListResponse(BaseModel):
 
     id: int
     name: str
+    color_tag: Optional[str] = None
+    category: Optional[str] = None
     tasks: List[TaskResponse] = []
 
     model_config = {"from_attributes": True}
@@ -39,6 +40,8 @@ class TaskListRequest(BaseModel):
     """
 
     name: str = Field(..., min_length=3, max_length=50)
+    color_tag: Optional[str] = None
+    category: Optional[str] = None
 
     @field_validator("name")
     @classmethod

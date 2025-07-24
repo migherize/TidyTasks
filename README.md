@@ -45,20 +45,28 @@
 ## 📂 Estructura del Proyecto
 
 ```
-tidytasks-backend/
 ├── src/
-│   ├── application/        # Casos de uso
-│   ├── domain/             # Entidades y lógica de negocio
-│   ├── infrastructure/     # Repositorios, DB, JWT, etc.
-│   └── main/               # Entrypoint FastAPI, rutas y dependencias
-├── tests/                  # Pruebas unitarias
-├── logs/                   # Carpeta para logs persistentes
-├── Dockerfile
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── routers/
+│   │   │   └── schemas/
+│   │   ├── core/
+│   │   ├── domain/
+│   │   │   └── models/
+│   │   ├── infrastructure/
+│   │   │   ├── db/
+│   │   │   │   ├── crud/
+│   │   │   │   ├── models/
+│   │   │   └── email/
+│   ├── logs/
+│   ├── tests/
+│   └── main.py
+├── DECISION_LOG.md
+├── docker-compose.db.yml
 ├── docker-compose.yml
-├── requirements.txt
-├── .env.example
+├── Dockerfile
 ├── README.md
-└── DECISION_LOG.md
+├── requirements.txt
 ```
 
 ---
@@ -71,19 +79,17 @@ tidytasks-backend/
 
 ## 🧠 Casos de Uso
 
+### 🗃️ Gestión de Listas
+
+* ✅ Crear, obtener, actualizar y eliminar listas de tareas.
+---
+
 ### 🗂️ Gestión de Tareas
 
 * ✅ Crear, obtener, actualizar, eliminar tareas.
 * 🔁 Cambiar estado (`is_done`).
 * 📋 Listar tareas con filtros (`estado`, `prioridad`).
 * 📊 Ver porcentaje de completitud de la lista.
-
-### 🗃️ Gestión de Listas
-
-* ✅ Crear, actualizar y eliminar listas.
-* 🎨 Organización visual por `color_tag` o `category`.
-
----
 
 ## 🧾 Modelos Conceptuales
 
@@ -96,7 +102,7 @@ tidytasks-backend/
   "description": "Definir agenda y enviar invitación",
   "priority": "high",
   "is_done": false,
-  "assignee_to": null,
+  "assignee_to": "ana@example.com",
   "created_at": "2025-07-23T18:30:00Z",
   "updated_at": "2025-07-23T18:35:00Z",
   "list_id": 10
@@ -111,7 +117,30 @@ tidytasks-backend/
   "name": "Tareas laborales",
   "color_tag": "#FF5733",
   "category": "trabajo",
-  "tasks": [...],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Preparar reunión",
+      "description": "Definir agenda y enviar invitación",
+      "priority": "high",
+      "is_done": false,
+      "assignee_to": "ana@example.com",
+      "created_at": "2025-07-23T18:30:00Z",
+      "updated_at": "2025-07-23T18:35:00Z",
+      "list_id": 10
+    },
+    {
+      "id": 2,
+      "title": "Enviar reporte semanal",
+      "description": null,
+      "priority": "medium",
+      "is_done": true,
+      "assignee_to": "miguel@example.com",
+      "created_at": "2025-07-22T16:00:00Z",
+      "updated_at": "2025-07-22T18:00:00Z",
+      "list_id": 10
+    }
+  ],
   "completion_percentage": 50.0
 }
 ```
@@ -125,6 +154,27 @@ tidytasks-backend/
 * Docker Compose v2+
 
 ---
+
+
+## 🔧 Configuración de Base de Datos Externa
+
+Puedes usar motores como PostgreSQL o MySQL configurando las siguientes variables en `.env`:
+
+```env
+PYTHONPATH=$(pwd)/src
+DB = "mysql+pymysql"
+userDB = "root"
+passwordDB = "password"
+name_serviceDB = "localhost"
+nameBD = "tidytasks"
+port = "3306"
+```
+
+Formato de conexión ejemplo:
+
+```
+postgresql://usuario:contraseña@host:puerto/base_de_datos
+```
 
 ## 🧪 Instalación
 
@@ -160,7 +210,8 @@ cp .env.example .env
 5. **Ejecuta la aplicación:**
 
 ```bash
-uvicorn src.main:app --reload
+cd src/
+uvicorn main:app --reload
 ```
 
 6. **Accede a la documentación interactiva:**
@@ -188,8 +239,13 @@ cp .env.example .env
 
 3. **Levanta los contenedores:**
 
+**Base de datos PostgreSQL (modo opcional):**
 ```bash
-docker compose up --build
+docker-compose -f docker-compose.db.yml up --build
+```
+**Servicio TidyTasks:**
+```bash
+docker-compose -f docker-compose.yml up --build
 ```
 
 4. **Accede a la API:**
@@ -200,21 +256,10 @@ http://localhost:8080/docs
 
 ---
 
-## 🔧 Configuración de Base de Datos Externa (opcional)
+## Test
 
-Puedes usar motores como PostgreSQL o MySQL configurando las siguientes variables en `.env`:
-
-```env
-DB = "mysql+pymysql"
-userDB = "root"
-passwordDB = "password"
-name_serviceDB = "localhost"
-nameBD = "tidytasks"
-port = "3306"
-```
-
-Formato de conexión ejemplo:
-
-```
-postgresql://usuario:contraseña@host:puerto/base_de_datos
-```
+Para realizar test de prueba
+    ```
+    pytest                      # ejecuta los 7 test
+    pytest -k test_name         # ejecuta los test 1 a 1
+    ```

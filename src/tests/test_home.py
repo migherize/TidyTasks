@@ -6,7 +6,11 @@ Este módulo contiene pruebas básicas que verifican que la función
 de la página de inicio.
 """
 
-from main import home_page
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from main import home_page  # pylint: disable=wrong-import-position
 
 
 def test_home_page():
